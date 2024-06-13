@@ -1,4 +1,7 @@
 //console.log(import.meta.env.VITE_API_KEY);
+//instalar npm express mongoose nodemon aparte
+//instalar npm install para el node modules
+//hacer la carpeta ".env.local" para poner la api key "  VITE_API_KEY="fea9d169b741475f83790017241006"  "
 
 import { LoadingButton } from "@mui/lab";
 import { Container, Box, TextField, Typography } from "@mui/material";
@@ -58,6 +61,27 @@ export default function App() {
       setLoading(false);
     }
   };
+
+  //const handleSearch = async () => {
+    //try {
+      //const response = await fetch(':https://api.weatherapi.com/v1/current.json?key=fea9d169b741475f83790017241006&lang=es&q=', {
+        //method: 'POST',
+        //headers: {
+          //'Content-Type': 'application/json',
+        //},
+        //body: JSON.stringify({ city: city }),
+      //});
+
+      //if (!response.ok) {
+        //throw new Error('Error al obtener los datos del clima');
+      //}
+
+      //const data = await response.json();
+      //setWeatherData(data);
+    //} catch (error) {
+      //console.error(error);
+    //}
+  //};
 
   return (
     <Container
