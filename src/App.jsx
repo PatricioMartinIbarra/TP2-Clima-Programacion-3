@@ -1,11 +1,16 @@
 //console.log(import.meta.env.VITE_API_KEY);
 //instalar npm express mongoose nodemon aparte
 //instalar npm install para el node modules
+//instalar npm install body-parser
+//instalar npm install cors
+//instalar npm install axios 
 //hacer la carpeta ".env.local" para poner la api key "  VITE_API_KEY="fea9d169b741475f83790017241006"  "
+//y tambien poner " MONGO_URI=mongodb://localhost:27017/p3tp2_appclima ""
 
 import { LoadingButton } from "@mui/lab";
 import { Container, Box, TextField, Typography } from "@mui/material";
 import { useState } from "react";
+import axios from "axios";
 
 const API_WEATHER = `http://api.weatherapi.com/v1/current.json?key=${
   import.meta.env.VITE_API_KEY
@@ -13,11 +18,11 @@ const API_WEATHER = `http://api.weatherapi.com/v1/current.json?key=${
 
 export default function App() {
   const [city, setCity] = useState("");
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState({
     error: false,
     message: "",
   });
+  const [loading, setLoading] = useState(false);
   const [weather, setWeather] = useState({
     city: "",
     country: "",
@@ -26,6 +31,25 @@ export default function App() {
     icon: "",
     conditionText: "",
   });
+
+  const saveSearch = async (searchData) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/saveSearch",
+        searchData
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error saving search:", error);
+      if (error.response) {
+        console.error("Server response:", error.response.data);
+      } else if (error.request) {
+        console.error("No response received:", error.request);
+      } else {
+        console.error("Axios error:", error.message);
+      }
+    }
+  };
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -37,51 +61,35 @@ export default function App() {
     try {
       if (!city.trim()) throw { message: "El campo ciudad es obligatorio" };
 
-      const response = await fetch(`${API_WEATHER}${city}`);
-      const data = await response.json();
+      const res = await fetch(API_WEATHER + city);
+      const data = await res.json();
 
-      if (data.error) throw { message: data.error.message };
+      if (data.error) {
+        throw { message: data.error.message };
+      }
 
-      setWeather({
+      console.log(data);
+
+      const weatherData = {
         city: data.location.name,
         country: data.location.country,
         temperature: data.current.temp_c,
         condition: data.current.condition.code,
-        icon: data.current.condition.icon,
         conditionText: data.current.condition.text,
-      });
-      console.log(data);
+        icon: data.current.condition.icon,
+      };
 
+      setWeather(weatherData);
+
+      // Guarda datos de búsqueda en el backend
+      await saveSearch(weatherData);
     } catch (error) {
-      setError({
-        error: true,
-        message: error.message,
-      });
+      console.log(error);
+      setError({ error: true, message: error.message });
     } finally {
       setLoading(false);
     }
   };
-
-  //const handleSearch = async () => {
-    //try {
-      //const response = await fetch(':https://api.weatherapi.com/v1/current.json?key=fea9d169b741475f83790017241006&lang=es&q=', {
-        //method: 'POST',
-        //headers: {
-          //'Content-Type': 'application/json',
-        //},
-        //body: JSON.stringify({ city: city }),
-      //});
-
-      //if (!response.ok) {
-        //throw new Error('Error al obtener los datos del clima');
-      //}
-
-      //const data = await response.json();
-      //setWeatherData(data);
-    //} catch (error) {
-      //console.error(error);
-    //}
-  //};
 
   return (
     <Container
