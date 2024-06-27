@@ -4,7 +4,7 @@
 //instalar npm install body-parser
 //instalar npm install cors
 //instalar npm install axios 
-//hacer la carpeta ".env.local" para poner la api key "  VITE_API_KEY="fea9d169b741475f83790017241006"  "
+//hacer el archivo ".env.local" para poner la api key "  VITE_API_KEY="fea9d169b741475f83790017241006"  afuera del src"
 //y tambien poner " MONGO_URI=mongodb://localhost:27017/p3tp2_appclima ""
 
 import { LoadingButton } from "@mui/lab";
